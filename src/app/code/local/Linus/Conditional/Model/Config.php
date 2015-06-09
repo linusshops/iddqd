@@ -34,8 +34,8 @@ class Linus_Conditional_Model_Config extends Mage_Core_Model_Config
         // happen, dependent on the context it is being executed in.
         if (isset($config->rewrite->$class)) {
             $eventData = new Varien_Object(array(
-                'class' => $class,
-                'class_factory_identifier' => $classArr
+                'group' => $group,
+                'class' => $class
             ));
             Mage::dispatchEvent(
                 'before_configxml_rewrite',

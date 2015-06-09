@@ -40,7 +40,7 @@ class Linus_Conditional_Model_Config extends Mage_Core_Model_Config
             Mage::dispatchEvent(
                 'before_configxml_rewrite',
                 array(
-                    'class' => $eventData
+                    'config' => $eventData
                 )
             );
 

@@ -1,0 +1,46 @@
+{
+  "name": "linusshops/conditional",
+  "description": "Magento event-based config.xml rewrites.",
+  "version": "0.1.0",
+  "type": "magento-module",
+  "keywords": [
+    "magento",
+    "module",
+    "linus shops",
+    "canadas motorcycle"
+  ],
+  "homepage": "https://github.com/linusshops/conditional",
+  "license": [
+    "MIT"
+  ],
+  "authors": [
+    {
+      "name": "Dane MacMillan",
+      "email": "work@danemacmillan.com",
+      "homepage": "https://danemacmillan.com",
+      "role": "Lead Developer"
+    },
+    {
+      "name": "Samuel Schmidt",
+      "email": "samuel@dersam.net",
+      "homepage": "http://dersam.net",
+      "role": "Web Developer"
+    },
+    {
+      "name": "Linus Shops Inc",
+      "email": "corporate@linusshops.com",
+      "homepage": "http://www.linusshops.com"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "http://packages.firegento.com"
+    }
+  ],
+  "require": {
+    "magento-hackathon/magento-composer-installer": "*"
+  },
+  "extra":{
+  }
+}

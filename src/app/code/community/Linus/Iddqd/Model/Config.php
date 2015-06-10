@@ -102,6 +102,46 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
     }
 
     /**
+     * Helper for getting blocks config.
+     *
+     * @return Varien_Simplexml_Element
+     */
+    public function getGlobalBlocks()
+    {
+        return $this->getXml()->descend('global/blocks');
+    }
+
+    /**
+     * Helper for getting helpers config.
+     *
+     * @return Varien_Simplexml_Element
+     */
+    public function getGlobalHelpers()
+    {
+        return $this->getXml()->descend('global/helpers');
+    }
+
+    /**
+     * Helper for getting models config.
+     *
+     * @return Varien_Simplexml_Element
+     */
+    public function getGlobalModels()
+    {
+        return $this->getXml()->descend('global/models');
+    }
+
+    /**
+     * Helper for getting frontend layout updates config.
+     *
+     * @return Varien_Simplexml_Element
+     */
+    public function getLayoutUpdates()
+    {
+        return $this->getXml()->descend('frontend/layout/updates');
+    }
+
+    /**
      * Get empty configuration object for loading and merging configuration parts.
      *
      * @return Mage_Core_Model_Config_Base

@@ -3,7 +3,7 @@
 /**
  * Rewrite of class Linus_Iddqd_Model_Config
  *
- * The purpose if this rewrite is to dispatch an event right before the
+ * The purpose of this rewrite is to dispatch an event right before the
  * config.xml classes are instantiated. The event lets any external module
  * observe and modify the config.xml object representation just before getting
  * instantiated, JIT-style.

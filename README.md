@@ -164,10 +164,15 @@ public function onBeforeConfigxmlRewrite(Varien_Event_Observer $observer)
         // https://i.imgur.com/Re3Ti2c.jpg
     }
     
-    // Custom Linus_Iddqd methods:
+    // Custom Linus_Iddqd methods, if the above is too much typing:
     
     // Merge in new config.xml.
     $instance->mergeConfig('path/to/custom/config.xml');
+    
+    // Rewrite a class, or multiple.
+    $instance
+        ->rewriteClass('global/models/catalog/rewrite/layer_filter_attribute', 'Linus_Better_Class')
+        ->rewriteClass('global/models/catalog/class', 'Linus_CoolerModule_Something_Something');
 }
 ```
 

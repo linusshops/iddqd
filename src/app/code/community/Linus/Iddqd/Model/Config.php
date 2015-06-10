@@ -127,11 +127,29 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
      * This will merge/overwrite existing nodes in XML object by default.
      *
      * @param $filePath Complete path to config.xml file.
+     *
+     * @return $this
      */
     public function mergeConfig($filePath)
     {
         $merge = clone $this->getPrototype();
         $merge->loadFile($filePath);
         $this->extend($merge);
+
+        return $this;
+    }
+
+    /**
+     * Helper to easily rewrite path with another class name.
+     *
+     * @param $xmlPath
+     * @param $className
+     *
+     * @return $this
+     */
+    public function rewriteClass($xmlPath, $className)
+    {
+        $this->setNode($xmlPath, $className);
+        return $this;
     }
 }

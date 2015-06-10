@@ -40,7 +40,7 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
 
         $config = $this->_xml->global->{$groupType.'s'}->{$group};
 
-        // Linus_Conditional
+        // iddqd
         // Throw event before rewrite, and verify whether the rewrite should
         // happen, dependent on the context it is being executed in.
         if (isset($config->rewrite->$class)) {
@@ -60,7 +60,7 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
             // Optionally specify another class name.
             $class = $eventData->getData('class');
         }
-        // /Linus_Conditional
+        // /iddqd
 
         // First - check maybe the entity class was rewritten
         $className = null;

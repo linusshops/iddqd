@@ -6,12 +6,12 @@ modify it on the fly, JIT-like. *This has unbelievably powerful consequences*.
 
 ## Why?
 
-A common boon to Magento development is the introduction of third-party modules.
-~~Most of them are terrible. I digress.~~ Often these third-party modules
-compete for the right to extend core Magento classes, but unfortunately Magento
-does not make that easy to control. In scenarios like this, where multiple
-modules rewrite the same classes, only one can survive, and its name is always
-Zoidberg.
+A common challenge to Magento development is the introduction of third-party
+modules. ~~Most of them are terrible. I digress.~~ Often these third-party
+modules compete for the right to extend core Magento classes, but unfortunately
+Magento does not make that easy to control. In scenarios like this, where
+multiple modules rewrite the same classes, only one can survive, and its name
+is always Zoidberg.
 
 The consensus among community help forums is to hack away at these modules
 until they are a symbiotic Loch Ness of code--hopefully never to be seen by

@@ -82,11 +82,7 @@ Having typed that all out, the last installation step is to modify Magento's
 `index.php` file to replace the last line so it reads like this instead:
 
 ```
-if (class_exists('Linus_Iddqd_Model_Config', false)) {
-    Mage::run($mageRunCode, $mageRunType, array('config_model' => 'Linus_Iddqd_Model_Config'));
-} else {
-    Mage::run($mageRunCode, $mageRunType);
-}
+Mage::run($mageRunCode, $mageRunType, array('config_model' => 'Linus_Iddqd_Model_Config'));
 ```
 
 ## Usage (i.e., the fun bits)

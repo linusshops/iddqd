@@ -32,7 +32,7 @@ One module should only modify the layered navigation on standard category
 listings, while the other should only modify the layered navigation on
 search results listings. **iddqd** makes this possible.
 
-**iddqd makes it possible contextually instantiate classes within Magento.**
+*iddqd makes it possible to contextually instantiate classes within Magento.*
 
 ### Impetus
 

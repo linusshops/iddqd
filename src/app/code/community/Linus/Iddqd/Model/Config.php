@@ -46,7 +46,6 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
         if (isset($config->rewrite->$class)) {
             $eventData = new Varien_Object(array(
                 'instance' => $this,
-                'xml' => $this->_xml,
                 'group' => $group,
                 'class' => $class
             ));
@@ -58,7 +57,9 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
             );
 
             // If returns null, or empty string, the rewrite will not happen.
-            // Optionally specify another class name.
+            // Optionally specify another class name. This does not even need
+            // to be here as all the data is passed by reference to observer,
+            // which can then unset this data.
             $class = $eventData->getData('class');
         }
         // /iddqd
@@ -108,6 +109,16 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
     public function getPrototype()
     {
         return $this->_prototype;
+    }
+
+    /**
+     * Helper method for getting protected _xml property in observer.
+     *
+     * @return Varien_Simplexml_Element
+     */
+    public function getXml()
+    {
+        return $this->_xml;
     }
 
     /**

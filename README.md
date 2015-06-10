@@ -127,14 +127,19 @@ original method. Read the source to see what data is passed.
 ```
 public function onBeforeConfigxmlRewrite(Varien_Event_Observer $observer)
 {
-    // Get Varien object data.
-    $config = $observer->getData('config');
+    // Get event.
+    $event = $observer->getEvent();
 
+    // Get Varien_Object event data.
+    $config = $event->getConfig();
+    
     /** @var Linus_Iddqd_Model_Config $instance */
-    $instance = $config->getData('instance');
+    $instance = $config->getInstance();
+    $class = $config->getClass();
+    $group = $config->getGroup();
 
     /** @var Mage_Core_Model_Config_Element $configXml */
-    $configXml = $config->getData('xml');
+    $configXml = $instance->getXml(); // Custom Linus_Iddqd method.
 
     // Retrieve ANY path IN ENTIRE UNIVERSE.
     $catalogModel = $configXml->descend('global/models/catalog');

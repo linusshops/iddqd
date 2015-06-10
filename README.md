@@ -138,14 +138,21 @@ public function onBeforeConfigxmlRewrite(Varien_Event_Observer $observer)
     // Get all rewrites for provided path, and pass whatever other classes
     // should be instantiated instead.
     $catalogRewrites = $configXml->descend('global/models/catalog/rewrite');
+    $catalogRewrites->setNode('layer_filter_attribute' => 'A_Better_Class');
+    
     // ...or just obliterate them, causing Magento use the default fall back.
     unset($catalogRewrites->layer_filter_attribute);
     unset($catalogRewrites->layer_filter_category);
     unset($catalogRewrites->layer_filter_item);
+    
+    // Maybe you just want to modify classes and rewrites on a given page
+    if (stripos(Mage::app()->getRequest()->getRequestUri(), 'helmets') {
+        // Perform magic.
+    }
 }
 ```
 
-![](https://i.imgur.com/jujcaDB.gif) 
+![](https://i.imgur.com/jujcaDB.gif)
 
 Take a moment. That is your mind being blown.
 
@@ -160,6 +167,12 @@ Take a moment. That is your mind being blown.
 ## Contributors
 
 [Samuel Schmidt](https://github.com/dersam)
+
+## Origin of the name
+
+**iddqd** will be obvious to anyone who grew up playing PC games in the 90s.
+What does it mean? It means you operate on *God Mode* and nothing can stop you.
+That is also what this module does.
 
 ## License
 

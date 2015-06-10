@@ -1,6 +1,6 @@
 {
   "name": "linusshops/iddqd",
-  "description": "Take extraordinary programmatic control of Magento's config.xml using events.",
+  "description": "Take extraordinary programmatic control of Magento's XML configs using event observers.",
   "version": "0.1.0",
   "type": "magento-module",
   "keywords": [

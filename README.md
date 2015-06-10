@@ -159,12 +159,12 @@ public function onBeforeConfigxmlRewrite(Varien_Event_Observer $observer)
     unset($catalogRewrites->layer_filter_category);
     unset($catalogRewrites->layer_filter_item);
     
-    // Maybe you just want to modify classes and rewrites on a given page
+    // Maybe you just want to modify classes and rewrites on a given page.
     if (stripos(Mage::app()->getRequest()->getRequestUri(), 'helmets') {
         // https://i.imgur.com/Re3Ti2c.jpg
     }
     
-    // Custom Linus_Iddqd methods, if the above is too much typing:
+    // Custom Linus_Iddqd methods:
     
     // Merge in new config.xml.
     $instance->mergeConfig('path/to/custom/config.xml');

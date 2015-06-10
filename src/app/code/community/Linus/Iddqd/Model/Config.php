@@ -45,6 +45,7 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
         // happen, dependent on the context it is being executed in.
         if (isset($config->rewrite->$class)) {
             $eventData = new Varien_Object(array(
+                'instance' => $this,
                 'xml' => $this->_xml,
                 'group' => $group,
                 'class' => $class
@@ -97,5 +98,29 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
 
         $this->_classNameCache[$groupRootNode][$group][$class] = $className;
         return $className;
+    }
+
+    /**
+     * Get empty configuration object for loading and merging configuration parts.
+     *
+     * @return Mage_Core_Model_Config_Base
+     */
+    public function getPrototype()
+    {
+        return $this->_prototype;
+    }
+
+    /**
+     * Merge custom config.xml on top of existing XML object.
+     *
+     * This will merge/overwrite existing nodes in XML object by default.
+     *
+     * @param $filePath Complete path to config.xml file.
+     */
+    public function mergeConfig($filePath)
+    {
+        $merge = clone $this->getPrototype();
+        $merge->loadFile($filePath);
+        $this->extend($merge);
     }
 }

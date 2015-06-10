@@ -130,6 +130,9 @@ public function onBeforeConfigxmlRewrite(Varien_Event_Observer $observer)
     // Get Varien object data.
     $config = $observer->getData('config');
 
+    /** @var Linus_Iddqd_Model_Config $instance */
+    $instance = $config->getData('instance');
+
     /** @var Mage_Core_Model_Config_Element $configXml */
     $configXml = $config->getData('xml');
 
@@ -156,7 +159,10 @@ public function onBeforeConfigxmlRewrite(Varien_Event_Observer $observer)
         // https://i.imgur.com/Re3Ti2c.jpg
     }
     
+    // Custom Linus_Iddqd methods:
     
+    // Merge in new config.xml.
+    $instance->mergeConfig('path/to/custom/config.xml');
 }
 ```
 

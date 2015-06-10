@@ -1,5 +1,5 @@
 # Define symlink path maps for ModMan and magento-composer-installer.
 
-src/app/code/community/Linus/Conditional  app/code/community/Linus/Conditional
+src/app/code/community/Linus/Iddqd  app/code/community/Linus/Iddqd
 
-src/app/etc/modules/Linus_Conditional.xml  app/etc/modules/Linus_Conditional.xml
+src/app/etc/modules/Linus_Iddqd.xml  app/etc/modules/Linus_Iddqd.xml

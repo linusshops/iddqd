@@ -39,9 +39,9 @@ The need for this solution arose when searching to see whether it would be
 possible to add a custom XML attribute like `ifcontroller="someController"` 
 to the `<rewrite>` nodes in `config.xml` files, in an attempt at a clean 
 integration between two distinct modules that rewrite the same core classes.
-It did not look straightforward, but the possibility of throwing an event right
-before the classes are named, seemed like a good opportunity for this kind of
-magic.
+That did not seem like a fruitful endeavour, but the possibility of throwing
+an event right before the classes are named, seemed like a good opportunity
+for this kind of magic.
 
 ## How?
 
@@ -59,36 +59,65 @@ it is finally passed back to the original flow.
 A rewrite is just a simple example, though. **iddqd** lifts any and every
 restriction when it comes to what classes get instantiated by Magento.
 
-##Usage
+## Installation
 
-Observe the `before_configxml_rewrite` event.  This will pass an object called
-"class" to your observer. To prevent a rewrite from occurring, change the "class"
-property of the class object to null.  To specify a different class to use,
-change the "class" property to the name of the other class to use.
+This should be installed using Composer. A magento build should also include the
+[Magento Composer Installer](https://github.com/Cotya/magento-composer-installer).
+This module follows the module structure guidelines provided by
+[Firegento](https://github.com/firegento/coding-guidelines/tree/master/sample-module),
+which will also make it very easy to submit to the
+[Firegento Composer Repository](https://github.com/magento-hackathon/composer-repository).
 
-### /index.php
+### Warning
+
+Magento does not allow directly rewriting the `Mage_Core_Model_Config` class.
+This is because it is integral to the proper functioning of Magento, and should
+it be rewritten badly, Magento will catastrophically fail. However, Magento
+did create a way to modify it, in a very explicit I-know-what-I'm-doing-because-I'm-a-pro
+type of way. If it is not already clear, this is an experimental module.
+If the technique applied in this module appears like black magic, installing 
+this is not advised. This is for advanced Magento development.
+
+Having typed that all out, the last installation step is to modify Magento's
+`index.php` file to make the last line read like this:
+
 ```
 Mage::run($mageRunCode, $mageRunType, array('config_model' => 'Linus_Conditional_Model_Config'));
 ```
 
-### etc/config.xml
+## Usage (i.e., the fun bits)
+
+In a new module, say, in an adapter module that serves as a way of orchestrating
+multiple modules, create the boilerplate necessary to observe the following
+custom event:
+
+```
+before_configxml_rewrite
+```
+
+This event will pass by reference a new `Varien_Object` with the event payload
+data, that can then be manipulated before passing control flow back to the 
+original method. Read the source to see what data is passed.
+
+
+#### `etc/config.xml`
 ```
 <global>
     <events>
         <before_configxml_rewrite>
             <observers>
-                <linus_adaptersearch>
+                <linus_example>
                     <type>singleton</type>
-                    <class>Linus_AdapterSearch_Model_Observer</class>
+                    <class>Linus_Example_Model_Observer</class>
                     <method>onBeforeConfigxmlRewrite</method>
-                </linus_adaptersearch>
+                </linus_example>
             </observers>
         </before_configxml_rewrite>
     </events>
 </global>
 ```
 
-### Model/Observer.php
+#### `Model/Observer.php`
 ```
 public function onBeforeConfigxmlRewrite(Varien_Event_Observer $observer)
 {
@@ -99,25 +128,40 @@ public function onBeforeConfigxmlRewrite(Varien_Event_Observer $observer)
     $configXml = $config->getData('xml');
 
     // Retrieve ANY path IN ENTIRE UNIVERSE.
-    $cool = $configXml->descend('global/models/catalog');
+    $catalogModel = $configXml->descend('global/models/catalog');
 
     // Because you disagree with the chosen class path, SET YOUR OWN.
-    $hiyooo = $configXml->setNode('global/models/catalog/class', 'LINUS_COOL');
+    $configXml->setNode('global/models/catalog/class', 'Linus_CoolerModule_Something_Something');
+    // Or this for short.
+    $catalogModel->setNode('class', 'Linus_CoolerModule_Something_Something');
+    
+    // Get all rewrites for provided path, and pass whatever other classes
+    // should be instantiated instead.
+    $catalogRewrites = $configXml->descend('global/models/catalog/rewrite');
+    // ...or just obliterate them, causing Magento use the default fall back.
+    unset($catalogRewrites->layer_filter_attribute);
+    unset($catalogRewrites->layer_filter_category);
+    unset($catalogRewrites->layer_filter_item);
 }
 ```
 
-## Warning
+![Mindblown](//i.imgur.com/jujcaDB.gif) 
 
-With great power comes even greater responsibility. You can TOTALLY GET **REKT**
-using this method.
-
-
-
-## Note
-
-This is still a work in progress.
+Take a moment. That is your mind being blown.
 
 ## TODO
 
-- Complete documentation
-- Write more functionality
+- Add helpers to make setting and unsetting classes and rewrites much easier.
+
+## Author
+
+[Dane MacMillan](https://github.com/danemacmillan)
+
+## Contributors
+
+[Samuel Schmidt](https://github.com/dersam)
+
+## License
+
+This module was created by Linus Shops and enthusiastically licensed to the
+Magento community under the [MIT License](http://opensource.org/licenses/MIT).

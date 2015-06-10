@@ -54,8 +54,8 @@ class if it exists, otherwise fall back to the Magento default. **iddqd**
 rewrites that method to insert an event dispatcher immediately before the logic
 to determine whether a class rewrite is valid; the entire XML representation is
 passed by reference as event data, which can then be observed in any other
-module and the XML representation can be manipulated without restriction before
-it is finally passed back to the original flow.
+module, at which point the XML representation can be manipulated without
+restriction before it is finally passed back to the original flow.
 
 A rewrite is just a simple example, though. **iddqd** lifts any and every
 restriction when it comes to what classes get instantiated by Magento.
@@ -157,7 +157,7 @@ public function onBeforeConfigxmlRewrite(Varien_Event_Observer $observer)
     unset($catalogRewrites->layer_filter_item);
     
     // Maybe you just want to modify classes and rewrites on a given page.
-    if (stripos(Mage::app()->getRequest()->getRequestUri(), 'helmets') {
+    if (stripos(Mage::app()->getRequest()->getRequestUri(), 'helmets') !== false) {
         // https://i.imgur.com/Re3Ti2c.jpg
     }
     

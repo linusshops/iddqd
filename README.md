@@ -142,14 +142,14 @@ public function onBeforeConfigxmlRewrite(Varien_Event_Observer $observer)
     $catalogRewrites = $configXml->descend('global/models/catalog/rewrite');
     $catalogRewrites->setNode('layer_filter_attribute' => 'A_Better_Class');
     
-    // ...or just obliterate them, causing Magento use the default fall back.
+    // ...or just obliterate them, causing Magento to use built-in core classes.
     unset($catalogRewrites->layer_filter_attribute);
     unset($catalogRewrites->layer_filter_category);
     unset($catalogRewrites->layer_filter_item);
     
     // Maybe you just want to modify classes and rewrites on a given page
     if (stripos(Mage::app()->getRequest()->getRequestUri(), 'helmets') {
-        // Perform magic.
+        // https://i.imgur.com/Re3Ti2c.jpg
     }
 }
 ```

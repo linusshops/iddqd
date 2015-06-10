@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * Rewrite of class Linus_Iddqd_Model_Config
+ *
+ * The purpose if this rewrite is to dispatch an event right before the
+ * config.xml classes are instantiated. The event lets any external module
+ * observe and modify the config.xml object representation just before getting
+ * instantiated, JIT-style.
+ *
+ * @author Dane MacMillan <work@danemacmillan.com>
+ * @company Linus Shops
+ */
 class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
 {
     /**

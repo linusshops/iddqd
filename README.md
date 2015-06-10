@@ -151,6 +151,8 @@ public function onBeforeConfigxmlRewrite(Varien_Event_Observer $observer)
     if (stripos(Mage::app()->getRequest()->getRequestUri(), 'helmets') {
         // https://i.imgur.com/Re3Ti2c.jpg
     }
+    
+    
 }
 ```
 

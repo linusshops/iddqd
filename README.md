@@ -145,7 +145,7 @@ public function onBeforeConfigxmlRewrite(Varien_Event_Observer $observer)
 }
 ```
 
-![Mindblown](//i.imgur.com/jujcaDB.gif) 
+![](https://i.imgur.com/jujcaDB.gif) 
 
 Take a moment. That is your mind being blown.
 

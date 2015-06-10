@@ -103,6 +103,7 @@ original method. Read the source to see what data is passed.
 #### `etc/config.xml`
 ```
 <global>
+    ...
     <events>
         <before_configxml_rewrite>
             <observers>
@@ -114,6 +115,7 @@ original method. Read the source to see what data is passed.
             </observers>
         </before_configxml_rewrite>
     </events>
+    ...
 </global>
 ```
 

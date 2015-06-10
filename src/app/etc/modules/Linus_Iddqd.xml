@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <config>
     <modules>
-        <Linus_Conditional>
+        <Linus_Iddqd>
             <active>true</active>
-            <codePool>local</codePool>
-        </Linus_Conditional>
+            <codePool>community</codePool>
+        </Linus_Iddqd>
     </modules>
 </config>

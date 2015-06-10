@@ -1,13 +1,13 @@
 <?php
 
-class Linus_Conditional_Model_Config extends Mage_Core_Model_Config
+class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
 {
     /**
      * Retrieve class name by class group
      *
      * NOTE: The only addition in this rewrite is the dispatch of an event,
-     * which makes it easier to conditionally rewrite code that has multiple
-     * rewrites in place, that typically cause conflicts.
+     * which makes it easier to conditionally modify any class paths or
+     * rewrites before they are instantiated.
      *
      * @param   string $groupType currently supported model, block, helper
      * @param   string $classId slash separated class identifier, ex. group/class

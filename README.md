@@ -1,4 +1,4 @@
-# Conditional
+# iddqd
 
 The purpose of this Magento module is to open up the possibility to
 conditionally `rewrite` code based on a given context. For example, if two

@@ -1,6 +1,6 @@
 {
-  "name": "linusshops/conditional",
-  "description": "Magento event-based config.xml rewrites.",
+  "name": "linusshops/iddqd",
+  "description": "Take extraordinary programmatic control of Magento's config.xml using events.",
   "version": "0.1.0",
   "type": "magento-module",
   "keywords": [
@@ -9,7 +9,7 @@
     "linus shops",
     "canadas motorcycle"
   ],
-  "homepage": "https://github.com/linusshops/conditional",
+  "homepage": "https://github.com/linusshops/iddqd",
   "license": [
     "MIT"
   ],

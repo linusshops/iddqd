@@ -2,22 +2,22 @@
 <config>
 
     <modules>
-        <Linus_Conditional>
+        <Linus_Iddqd>
             <version>0.1.0</version>
-        </Linus_Conditional>
+        </Linus_Iddqd>
     </modules>
 
     <global>
         <helpers>
-            <linus_conditional>
-                <class>Linus_Conditional_Helper</class>
-            </linus_conditional>
+            <linus_iddqd>
+                <class>Linus_Iddqd_Helper</class>
+            </linus_iddqd>
         </helpers>
 
         <models>
             <core>
                 <rewrite>
-                    <config>Linus_Conditional_Model_Config</config>
+                    <config>Linus_Iddqd_Model_Config</config>
                 </rewrite>
             </core>
         </models>

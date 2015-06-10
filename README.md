@@ -1,8 +1,9 @@
 # iddqd
 
 The purpose of this module is to programmatically intercept Magento's merged 
-and parsed XML representation of all the `config.xml` files in operation, and 
-modify it on the fly, JIT-like. *This has unbelievably powerful consequences*.
+and parsed XML object representation of all the configuration `*.xml` files in
+operation, and modify it on the fly, JIT-like. *This has unbelievably powerful
+consequences*.
 
 ## Why?
 

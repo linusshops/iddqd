@@ -122,6 +122,16 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
     }
 
     /**
+     * Helper for getting global config.
+     *
+     * @return Varien_Simplexml_Element
+     */
+    public function getGlobalConfig()
+    {
+        return $this->getXml()->descend('global');
+    }
+
+    /**
      * Helper for getting global events config.
      *
      * @return Varien_Simplexml_Element
@@ -344,6 +354,40 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
         foreach ($moduleNames as $moduleName) {
             if (!empty($moduleXmlPath->$moduleName)) {
                 $moduleXmlPath->$moduleName->setNode('active', 'false');
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove codebase group from existence.
+     *
+     * Pass a codegroup within the global config, and an array of codegroup
+     * names, and they will be removed from the config.
+     *
+     * @param String $codeGroup Example: "blocks|helpers|models..."
+     * @param array $codeGroupNames The codegroup handle
+     *
+     * @return $this
+     *
+     * @throws Mage_Core_Exception
+     */
+    public function removeGlobalCodebasesFor($codeGroup, $codeGroupNames = array())
+    {
+        if (!$codeGroup
+            || (is_array($codeGroupNames)
+                && !count($codeGroupNames))
+        ) {
+            Mage::throwException(Mage::helper('core')->__(
+                'Invalid arguments passed to removeGlobalCodebasesFor.'
+            ));
+        }
+
+        $globalCodeGroup = $this->getGlobalConfig()->$codeGroup;
+        foreach ($codeGroupNames as $codeGroupName) {
+            if (isset($globalCodeGroup->$codeGroupName)) {
+                unset($globalCodeGroup->$codeGroupName);
             }
         }
 

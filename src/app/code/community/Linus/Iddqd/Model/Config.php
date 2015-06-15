@@ -172,6 +172,16 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
     }
 
     /**
+     * Helper for getting modules config.
+     *
+     * @return Varien_Simplexml_Element
+     */
+    public function getModules()
+    {
+        return $this->getXml()->descend('modules');
+    }
+
+    /**
      * Get empty configuration object for loading and merging configuration parts.
      *
      * @return Mage_Core_Model_Config_Base
@@ -243,6 +253,8 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
      * @param Array $registeredObserverHandles
      *
      * @return $this
+     *
+     * @throws Mage_Core_Exception
      */
     public function disableEventObserversFor($area, $registeredObserverHandles = array())
     {
@@ -288,6 +300,8 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
      * @param $layoutXmlHandles
      *
      * @return $this
+     *
+     * @throws Mage_Core_Exception
      */
     public function disableFrontendLayoutXmlUpdatesFor($layoutXmlHandles = array())
     {
@@ -302,6 +316,35 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
         $layoutXmlPath = $this->getLayoutUpdates();
         foreach ($layoutXmlHandles as $layoutXmlHandle) {
             unset($layoutXmlPath->$layoutXmlHandle);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set given active flag for given module names to false.
+     *
+     * @param array $moduleNames
+     *
+     * @return $this
+     *
+     * @throws Mage_Core_Exception
+     */
+    public function disableModulesByName($moduleNames = array())
+    {
+        if (is_array($moduleNames)
+            && !count($moduleNames)
+        ) {
+            Mage::throwException(Mage::helper('core')->__(
+                'At least one module name must be provided.'
+            ));
+        }
+
+        $moduleXmlPath = $this->getModules();
+        foreach ($moduleNames as $moduleName) {
+            if (!empty($moduleXmlPath->$moduleName)) {
+                $moduleXmlPath->$moduleName->setNode('active', 'false');
+            }
         }
 
         return $this;

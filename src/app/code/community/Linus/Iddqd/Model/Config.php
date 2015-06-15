@@ -397,16 +397,34 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
     }
 
     /**
-     * Helper to easily rewrite path with another class name.
+     * Helper to easily rewrite class path with another class handle name.
      *
-     * @param $xmlPath
-     * @param $className
+     * @param $xmlPath Path to class handles.
+     * @param $classHandle Class name handle.
      *
      * @return $this
      */
-    public function rewriteClass($xmlPath, $className)
+    public function rewriteClass($xmlPath, $classHandle)
     {
-        $this->setNode($xmlPath, $className);
+        $configXml = $this->getXml();
+        $configXml->setNode($xmlPath, $classHandle);
+
+        return $this;
+    }
+
+    /**
+     * Helper to easily delete class path by class handle name.
+     *
+     * @param $xmlPath Path to class handles.
+     * @param $classHandle Class name handle.
+     *
+     * @return $this
+     */
+    public function deleteClass($xmlPath, $classHandle)
+    {
+        $configXml = $this->getXml();
+        unset($configXml->descend($xmlPath)->$classHandle);
+
         return $this;
     }
 }

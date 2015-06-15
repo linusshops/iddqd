@@ -283,6 +283,31 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
     }
 
     /**
+     * Disable frontend layout.xml updates files for provided handles.
+     *
+     * @param $layoutXmlHandles
+     *
+     * @return $this
+     */
+    public function disableFrontendLayoutXmlUpdatesFor($layoutXmlHandles = array())
+    {
+        if (is_array($layoutXmlHandles)
+            && !count($layoutXmlHandles)
+        ) {
+            Mage::throwException(Mage::helper('core')->__(
+                'At least one layout handle must be provided.'
+            ));
+        }
+
+        $layoutXmlPath = $this->getLayoutUpdates();
+        foreach ($layoutXmlHandles as $layoutXmlHandle) {
+            unset($layoutXmlPath->$layoutXmlHandle);
+        }
+
+        return $this;
+    }
+
+    /**
      * Helper to easily rewrite path with another class name.
      *
      * @param $xmlPath

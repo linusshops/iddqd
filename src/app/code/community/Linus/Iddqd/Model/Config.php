@@ -325,7 +325,9 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
 
         $layoutXmlPath = $this->getLayoutUpdates();
         foreach ($layoutXmlHandles as $layoutXmlHandle) {
-            unset($layoutXmlPath->$layoutXmlHandle);
+            if (isset($layoutXmlPath->$layoutXmlHandle)) {
+                unset($layoutXmlPath->$layoutXmlHandle);
+            }
         }
 
         return $this;

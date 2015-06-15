@@ -102,6 +102,36 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
     }
 
     /**
+     * Helper for getting adminhtml events config.
+     *
+     * @return Varien_Simplexml_Element
+     */
+    public function getAdminhtmlEvents()
+    {
+        return $this->getXml()->descend('adminhtml/events');
+    }
+
+    /**
+     * Helper for getting frontend events config.
+     *
+     * @return Varien_Simplexml_Element
+     */
+    public function getFrontendEvents()
+    {
+        return $this->getXml()->descend('frontend/events');
+    }
+
+    /**
+     * Helper for getting global events config.
+     *
+     * @return Varien_Simplexml_Element
+     */
+    public function getGlobalEvents()
+    {
+        return $this->getXml()->descend('global/events');
+    }
+
+    /**
      * Helper for getting blocks config.
      *
      * @return Varien_Simplexml_Element
@@ -175,6 +205,79 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
         $merge = clone $this->getPrototype();
         $merge->loadFile($filePath);
         $this->extend($merge);
+
+        return $this;
+    }
+
+    /**
+     * Pass registered observer handles and disable their execution.
+     *
+     * This prevents registered event observers from ever being called. Note,
+     * the registered observer can be disabled using two different techniques:
+     *
+     *  - Destructive: unset the registered observer, literally removing it.
+     *  - Proper: Set the registered observer type as `disabled`, which
+     *      is non-destructive, and uses built-in Magento logic to disable
+     *      events.
+     *
+     * This method opts to use the proper, non-destructive approach.
+     *
+     * The observer name is the XML element directly after the <observers>
+     * element. This is an example:
+     *
+     *  <frontend>
+     *      <events>
+     *          <dispatched_event_name>
+     *              <observers>
+     *                  <registered_observer_namespace>
+     *                      <type>singleton</type>
+     *                      <class>Linus_Example_Model_Observer</class>
+     *                      <method>onBeforeConfigxmlRewrite</method>
+     *                  </registered_observer_namespace>
+     *              </observers>
+     *          </dispatched_event_name>
+     *      </events>
+     *  </frontend>
+     *
+     * @param String $area One of: global|frontend|adminhtml.
+     * @param Array $registeredObserverHandles
+     *
+     * @return $this
+     */
+    public function disableEventObserversFor($area, $registeredObserverHandles = array())
+    {
+        // Determine event area to disable events.
+        $frontendEventsConfig = '';
+        switch ($area) {
+            case 'global':
+                $frontendEventsConfig = $this->getFrontendEvents();
+                break;
+            case 'frontend':
+                $frontendEventsConfig = $this->getFrontendEvents();
+                break;
+            case 'adminhtml':
+                $frontendEventsConfig = $this->getFrontendEvents();
+                break;
+        }
+
+        if (!$frontendEventsConfig || !count($registeredObserverHandles)) {
+            Mage::throwException(Mage::helper('core')->__(
+                'Invalid arguments passed to disableEventObserversFor.'
+            ));
+        }
+
+        foreach ($registeredObserverHandles as $registeredObserverNamespace) {
+            foreach ($frontendEventsConfig as $iterableEventsConfig) {
+                foreach ($iterableEventsConfig as $dispatchedEvent) {
+                    $eventObservers = $dispatchedEvent->observers;
+                    if (isset($eventObservers->$registeredObserverNamespace)) {
+                        $eventObservers->$registeredObserverNamespace->type = 'disabled';
+                        // This also works, but no need to use it.
+                        //unset($eventObservers->$registeredObserverNamespace);
+                    }
+                }
+            }
+        }
 
         return $this;
     }

@@ -170,6 +170,9 @@ public function onBeforeConfigxmlRewrite(Varien_Event_Observer $observer)
     $instance
         ->rewriteClass('global/models/catalog/rewrite/layer_filter_attribute', 'Linus_Better_Class')
         ->rewriteClass('global/models/catalog/class', 'Linus_CoolerModule_Something_Something');
+
+    // Delete class. It does not need to be a rewrite. It can be any of them.
+    $instance->deleteClass('global/models/catalog/rewrite', 'layer_filter_attribute');
 }
 ```
 

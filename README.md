@@ -183,6 +183,8 @@ Take a moment. That is your mind being blown.
 ## TODO
 
 - Add helpers to make setting and unsetting classes and rewrites much easier.
+- Explore possibility of rewriting app/code/core/Mage/Core/Model/Layout/Update.php:456
+to throw event strictly for layout XML.
 
 ## Author
 

@@ -40,10 +40,15 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
 
         $config = $this->_xml->global->{$groupType.'s'}->{$group};
 
-        // iddqd
+        //iddqd
         // Throw event before rewrite, and verify whether the rewrite should
         // happen, dependent on the context it is being executed in.
-        if (isset($config->rewrite->$class)) {
+        if (isset($config->rewrite->$class)
+            // Many core classes at start of execution stack do not have access
+            // to model instantiation, which cause failures when trying to call
+            // getModel or getSingleton from observer.
+            && !in_array($group, array('core'))
+        ) {
             $eventData = new Varien_Object(array(
                 'instance' => $this,
                 'group' => $group,
@@ -57,12 +62,13 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
             );
 
             // If returns null, or empty string, the rewrite will not happen.
-            // Optionally specify another class name. This does not even need
-            // to be here as all the data is passed by reference to observer,
-            // which can then unset this data.
+            // Optionally specify another class name. This is only here as a
+            // convenience. The proper way to modify this is by accessing the
+            // event `instance` data and redefining the rewrite, or removing the
+            // rewrite, so that the proceeding rewrite check can evaluate it.
             $class = $eventData->getData('class');
         }
-        // /iddqd
+        ///iddqd
 
         // First - check maybe the entity class was rewritten
         $className = null;
@@ -397,33 +403,25 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
     }
 
     /**
-     * Helper to easily rewrite class path with another class handle name.
+     * Helper to easily rewrite path with another class name.
      *
-     * @param $xmlPath Path to class handles.
-     * @param $classHandle Class name handle.
+     * @param $xmlPath Path to class ah
+     * @param $className
      *
      * @return $this
      */
-    public function rewriteClass($xmlPath, $classHandle)
+    public function rewriteClass($xmlPath, $className)
     {
         $configXml = $this->getXml();
-        $configXml->setNode($xmlPath, $classHandle);
-
+        $configXml->setNode($xmlPath, $className);
         return $this;
     }
 
-    /**
-     * Helper to easily delete class path by class handle name.
-     *
-     * @param $xmlPath Path to class handles.
-     * @param $classHandle Class name handle.
-     *
-     * @return $this
-     */
     public function deleteClass($xmlPath, $classHandle)
     {
         $configXml = $this->getXml();
-        unset($configXml->descend($xmlPath)->$classHandle);
+        $deleteClass = $configXml->descend($xmlPath);
+        unset($deleteClass->$classHandle);
 
         return $this;
     }

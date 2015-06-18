@@ -43,12 +43,7 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
         //iddqd
         // Throw event before rewrite, and verify whether the rewrite should
         // happen, dependent on the context it is being executed in.
-        if (isset($config->rewrite->$class)
-            // Many core classes at start of execution stack do not have access
-            // to model instantiation, which cause failures when trying to call
-            // getModel or getSingleton from observer.
-            && !in_array($group, array('core'))
-        ) {
+        if (isset($config->rewrite->$class)) {
             $eventData = new Varien_Object(array(
                 'instance' => $this,
                 'group' => $group,

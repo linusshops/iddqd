@@ -30,6 +30,28 @@ class Linus_Iddqd_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * This is essential for helpers that check controller information.
+     *
+     * See app/code/core/Mage/Core/Model/App.php:747 to see how the
+     * frontController gets instantiated and added to the registry. Trying to
+     * call getFrontController off of Mage::app() before it has been
+     * instantiated results in an exception that cannot be contained. The reason
+     * it may not have been instantiated yet is because Iddqd throws its
+     * event extremely early in the call stack, and many of these essential
+     * methods have not become available yet. _frontController is protected and
+     * unavailable to the observer context from Mage::app()->_frontController,
+     * so checking for null is not possible. This is the best option, as it
+     * always gets registered when instantiated. It is the only object that
+     * occupies the "controller" registry key.
+     *
+     * @return Mage_Core_Controller_Varien_Front
+     */
+    public function getFrontController()
+    {
+        return Mage::registry('controller');
+    }
+
+    /**
      * Get the front controller name, if available.
      *
      * Example front controller names:
@@ -43,7 +65,10 @@ class Linus_Iddqd_Helper_Data extends Mage_Core_Helper_Abstract
     {
         $frontControllerName = null;
         try {
-            $frontControllerName = Mage::app()->getFrontController()->getRequest()->getControllerName();
+            $frontController = $this->getFrontController();
+            if (!is_null($frontController)) {
+                $frontControllerName = $frontController->getRequest()->getControllerName();
+            }
         } catch (Mage_Core_Model_Store_Exception $e) {
             // Be graceful.
         }
@@ -65,8 +90,8 @@ class Linus_Iddqd_Helper_Data extends Mage_Core_Helper_Abstract
     {
         $frontControllerActionName = null;
         try {
-            $frontController = Mage::app()->getFrontController();
-            if ($frontController->getAction()) {
+            $frontController = $this->getFrontController();
+            if (!is_null($frontController)) {
                 $frontControllerActionName = $frontController->getAction()->getFullActionName();
             }
         } catch (Mage_Core_Model_Store_Exception $e) {
@@ -151,18 +176,22 @@ class Linus_Iddqd_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Helper for determining if on a search-related page.
+     * Helper for determining if on a search result page.
      *
      * @return bool
      */
-    public function isSearchPage()
+    public function isSearchResultPage()
     {
-        $isSearchPage = false;
+        $isSearchResultPage = false;
+
+        // Checking against this URL part provides early access to call stack,
+        // even before the frontController has been instantiated. See
+        // getFrontController in this class for better explanation.
+        $searchControllerUrlPath = '/catalogsearch/result';
 
         $frontControllerName = $this->getFrontControllerName();
         $searchPageControllerNames = array(
-            'result',
-            'advanced'
+            'result'
         );
 
         $frontControllerActionName = $this->getFrontControllerActionName();
@@ -170,12 +199,13 @@ class Linus_Iddqd_Helper_Data extends Mage_Core_Helper_Abstract
             'catalogsearch_result_index'
         );
 
-        if (in_array($frontControllerName, $searchPageControllerNames)
+        if ($this->isInUrl($searchControllerUrlPath)
+            || in_array($frontControllerName, $searchPageControllerNames)
             || in_array($frontControllerActionName, $searchPageControllerActionNames)
         ) {
-            $isSearchPage = true;
+            $isSearchResultPage = true;
         }
 
-        return $isSearchPage;
+        return $isSearchResultPage;
     }
 }

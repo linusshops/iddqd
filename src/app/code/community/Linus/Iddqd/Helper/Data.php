@@ -91,7 +91,9 @@ class Linus_Iddqd_Helper_Data extends Mage_Core_Helper_Abstract
         $frontControllerActionName = null;
         try {
             $frontController = $this->getFrontController();
-            if (!is_null($frontController)) {
+            if (!is_null($frontController)
+                && !is_null($frontController->getData('action'))
+            ) {
                 $frontControllerActionName = $frontController->getAction()->getFullActionName();
             }
         } catch (Mage_Core_Model_Store_Exception $e) {

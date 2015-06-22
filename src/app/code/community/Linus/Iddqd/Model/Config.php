@@ -400,8 +400,8 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
     /**
      * Helper to easily rewrite path with another class name.
      *
-     * @param $xmlPath Path to class ah
-     * @param $className
+     * @param String $xmlPath Path to class handle.
+     * @param String $className Class name to be instantiated.
      *
      * @return $this
      */
@@ -409,14 +409,78 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
     {
         $configXml = $this->getXml();
         $configXml->setNode($xmlPath, $className);
+
         return $this;
     }
 
+    /**
+     * Helper to easily rewrite path with corresponding class names.
+     *
+     * If there are many rewrites to define, it is probably better to use the
+     * mergeConfig method, which can merge an entire config.xml, effectively
+     * doing what this helper does, but includes everything else, too. This is
+     * here in case the mergeConfig method is not flexible enough.
+     *
+     * @param String $xmlPath
+     * @param Array $classHandleNames Pass array with classHandle => className.
+     *
+     * @return $this
+     */
+    public function rewriteClasses($xmlPath, $classHandleNames)
+    {
+        if (is_array($classHandleNames)
+            && count($classHandleNames)
+        ) {
+            foreach ($classHandleNames as $classHandle => $className) {
+                $this->rewriteClass("$xmlPath/$classHandle", $className);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Helper to easily delete class handle from path.
+     *
+     * This can be used to delete any class name from an XML path, not just
+     * other rewrites.
+     *
+     * @param String $xmlPath
+     * @param String $classHandle
+     *
+     * @return $this
+     */
     public function deleteClass($xmlPath, $classHandle)
     {
         $configXml = $this->getXml();
         $deleteClass = $configXml->descend($xmlPath);
-        unset($deleteClass->$classHandle);
+        if (isset($deleteClass->$classHandle)) {
+            unset($deleteClass->$classHandle);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Helper to easily delete class handles from path.
+     *
+     * Pass an XML path and an array of class handles found at that path, which
+     * will be removed.
+     *
+     * @param String $xmlPath
+     * @param Array $classHandles
+     *
+     * @return $this
+     */
+    public function deleteClasses($xmlPath, $classHandles)
+    {
+        if (is_array($classHandles)
+            && count($classHandles)
+        ) {
+            foreach ($classHandles as $classHandle) {
+                $this->deleteClass($xmlPath, $classHandle);
+            }
+        }
 
         return $this;
     }

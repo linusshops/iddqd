@@ -18,6 +18,7 @@
             <core>
                 <rewrite>
                     <config>Linus_Iddqd_Model_Config</config>
+                    <layout_update>Linus_Iddqd_Model_Layout_Update</layout_update>
                 </rewrite>
             </core>
         </models>

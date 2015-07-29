@@ -48,10 +48,16 @@ class Linus_Iddqd_Model_Layout_Update extends Mage_Core_Model_Layout_Update
         // custom local layout updates file - load always last
         $updateFiles[] = 'local.xml';
 
-        Mage::dispatchEvent('before_layoutxml_compile', array(
-            'godmode' => $this,
-            'updateFiles' => $updateFiles
+        $eventData = new Varien_Object(array(
+            'god_mode' => $this,
+            'update_files' => $updateFiles
         ));
+
+        Mage::dispatchEvent('before_layoutxml_compile', array(
+            'updates' => $eventData
+        ));
+
+        $updateFiles = $eventData->getUpdateFiles();
 
         $layoutStr = '';
         foreach ($updateFiles as $file) {

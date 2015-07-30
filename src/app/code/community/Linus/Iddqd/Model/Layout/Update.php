@@ -1,9 +1,12 @@
 <?php
 
 /**
- * Throw event to allow injection of layout files based on page context
+ * Throw event to allow injection of layout files based on page context.
+ * To accomplish this, an event is dispatched right before the layout updates
+ * are processed. Using this event, additional layout files can be injected
+ * based on programmatic rules.
  *
- * @author Sam Schmidt
+ * @author Sam Schmidt <samuel@dersam.net>
  * @date 2015-07-29
  * @company Linus Shops
  */
@@ -48,13 +51,16 @@ class Linus_Iddqd_Model_Layout_Update extends Mage_Core_Model_Layout_Update
         // custom local layout updates file - load always last
         $updateFiles[] = 'local.xml';
 
+        /**
+         * IDDQD: Inject custom layout files via event.
+         */
         $eventData = new Varien_Object(array(
-            'god_mode' => $this,
             'update_files' => $updateFiles
         ));
 
         Mage::dispatchEvent('before_layoutxml_compile', array(
-            'updates' => $eventData
+            'updates' => $eventData,
+            'god_mode' => $this
         ));
 
         $updateFiles = $eventData->getUpdateFiles();
@@ -80,5 +86,19 @@ class Linus_Iddqd_Model_Layout_Update extends Mage_Core_Model_Layout_Update
 
         $layoutXml = simplexml_load_string('<layouts>'.$layoutStr.'</layouts>', $elementClass);
         return $layoutXml;
+    }
+
+    /**
+     * Append a layout update file to the layout updates file list.
+     * For use in the thrown event.
+     *
+     * @param $observer Varien_Event_Observer
+     * @param $newFile string file name of the additional layout update file.
+     */
+    public function addLayoutUpdate(Varien_Event_Observer $observer, $newFile)
+    {
+        $updates = $observer->getUpdates()->getUpdateFiles();
+        $updates[] = $newFile;
+        $observer->getUpdates()->setUpdateFiles($updates);
     }
 }

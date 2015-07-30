@@ -209,8 +209,9 @@ As above, create the observer boilerplate, observing the `before_layoutxml_compi
 
 #### Model/Observer.php
 ```
-public function onBeforeLayoutXmlCompile(Varien_Event_Observer)
+public function onBeforeLayoutXmlCompile(Varien_Event_Observer $observer)
 {
+	/** @var Linus_Iddqd_Model_Layout_Update $godMode */
 	$godMode = $observer->getGodMode();
 	//Append the specified layout xml to your layout stack. Since it
 	//is processed last, its rules will update everything else.

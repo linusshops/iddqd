@@ -180,11 +180,53 @@ public function onBeforeConfigxmlRewrite(Varien_Event_Observer $observer)
 
 Take a moment. That is your mind being blown.
 
+##Layout Injector
+There may also be call for injecting layout XML based on the request context. As discussed above, Magento is lacking when it comes to getting modules to work together, even in layouts.  In the case of two modules trying to modify the layouts in different contexts, this event allows you to inject contextual layout xml to get modules to work together (again, useful in the context of an adapter module).
+
+IDDQD throws an event in the class that builds the layout update xml from all of your modules. Observing this event will allow you to append additional layout update xml files right before the merged XML is built. These additional files can be added based on programmatic rules, allowing you full control over the layouts in use.
+
+###Usage
+As above, create the observer boilerplate, observing the `before_layoutxml_compile` event.
+
+#### `etc/config.xml`
+```
+<global>
+    ...
+    <events>
+        <before_layoutxml_compile>
+            <observers>
+                <linus_example>
+                    <type>singleton</type>
+                    <class>Linus_Example_Model_Observer</class>
+                    <method>onBeforeLayoutXmlCompile</method>
+                </linus_example>
+            </observers>
+        </before_layoutxml_compile>
+    </events>
+    ...
+</global>
+```
+
+#### Model/Observer.php
+```
+public function onBeforeLayoutXmlCompile(Varien_Event_Observer)
+{
+	$godMode = $observer->getGodMode();
+	//Append the specified layout xml to your layout stack. Since it
+	//is processed last, its rules will update everything else.
+	if ($someCondition) {
+		$godMode->addLayoutUpdate($observer, 'my_contextual_layout.xml');
+	} else {
+		//Or maybe it's some other context, so we'll use this instead.
+		$godMode->addLayoutUpdate($observer, 'different_contextual_layout.xml');
+	}
+}
+```
+
+
 ## TODO
 
 - Add helpers to make setting and unsetting classes and rewrites much easier.
-- Explore possibility of rewriting app/code/core/Mage/Core/Model/Layout/Update.php:456
-to throw event strictly for layout XML.
 
 ## Author
 

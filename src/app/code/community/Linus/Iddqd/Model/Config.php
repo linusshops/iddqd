@@ -524,8 +524,11 @@ return [
                 $skipDependency = false;
 
                 if ($moduleProps['active'] && ((!isset($modules[$depend])) || empty($modules[$depend]['active']))) {
-                    $depoverrides = include(Mage::getBaseDir().'/dependencyOverride.php');
-
+                    $depfile = Mage::getBaseDir().'/dependencyOverride.php';
+                    if (file_exists($depfile)) {
+                        $depoverrides = include($depfile);
+                    }
+                    //Load the depfile, only if in developer mode.
                     if (Mage::getIsDeveloperMode() && isset($depoverrides[$moduleName])) {
                         $skipDependency = in_array($depend, $depoverrides[$moduleName]);
                     }
@@ -542,6 +545,7 @@ return [
                     $depends = array_merge($depends,
                         $modules[$depend]['depends']);
                 } else {
+                    //Remove the dependency.
                     unset($depends[$depend]);
                 }
             }

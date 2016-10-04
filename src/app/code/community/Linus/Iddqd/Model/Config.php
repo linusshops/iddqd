@@ -484,4 +484,94 @@ class Linus_Iddqd_Model_Config extends Mage_Core_Model_Config
 
         return $this;
     }
+
+    /**
+     * Some module vendors are jerks and use IonCube encoding. This makes it
+     * impossible to modify their code in your integration. These same vendors also
+     * make it a HUGE hassle to install their modules, such that automated builds
+     * become difficult or impossible. Automated builds are cool.
+     *
+     * Sometimes, you have very minor changes that can gracefully degrade if the
+     * module doesn't exist, except Magento doesn't allow this. You either have
+     * the dependency, or everything is on fire. This results
+     * in commenting out the annoying dependency note "just for now on dev", then
+     * forgetting, committing it, and wondering where this regression came from.
+     *
+     * This modification allows targeting a specific module's dependency, and
+     * telling Magento that when dev mode is on, it's ok if it doesn't exist. The
+     * list of kosher missing dependencies is provided via a `dependencyOverride.php`
+     * file in the Magento root directory. This file should be of the form
+     *
+return [
+    'Linus_Example' => [
+        'Some_Module',
+        'Some_OtherModule'
+    ]
+];
+     *
+     * By specifying the ignored modules on a per-module basis, this allows
+     * the existence of dependencies that truly are too important to fail, and
+     * some that don't really matter.
+     *
+     * @param array $modules
+     * @return array
+     */
+    protected function _sortModuleDepends($modules)
+    {
+        foreach ($modules as $moduleName => $moduleProps) {
+            $depends = $moduleProps['depends'];
+            foreach ($moduleProps['depends'] as $depend => $true) {
+                $skipDependency = false;
+
+                if ($moduleProps['active'] && ((!isset($modules[$depend])) || empty($modules[$depend]['active']))) {
+                    $depoverrides = include(Mage::getBaseDir().'/dependencyOverride.php');
+
+                    if (Mage::getIsDeveloperMode() && isset($depoverrides[$moduleName])) {
+                        $skipDependency = in_array($depend, $depoverrides[$moduleName]);
+                    }
+
+                    if (!$skipDependency) {
+                        Mage::throwException(
+                            Mage::helper('core')->__('Module "%1$s" requires module "%2$s".',
+                                $moduleName, $depend)
+                        );
+                    }
+                }
+
+                if (!$skipDependency) {
+                    $depends = array_merge($depends,
+                        $modules[$depend]['depends']);
+                } else {
+                    unset($depends[$depend]);
+                }
+            }
+            $modules[$moduleName]['depends'] = $depends;
+        }
+        $modules = array_values($modules);
+
+        $size = count($modules) - 1;
+        for ($i = $size; $i >= 0; $i--) {
+            for ($j = $size; $i < $j; $j--) {
+                if (isset($modules[$i]['depends'][$modules[$j]['module']])) {
+                    $value       = $modules[$i];
+                    $modules[$i] = $modules[$j];
+                    $modules[$j] = $value;
+                }
+            }
+        }
+
+        $definedModules = array();
+        foreach ($modules as $moduleProp) {
+            foreach ($moduleProp['depends'] as $dependModule => $true) {
+                if (!isset($definedModules[$dependModule])) {
+                    Mage::throwException(
+                        Mage::helper('core')->__('Module "%1$s" cannot depend on "%2$s".', $moduleProp['module'], $dependModule)
+                    );
+                }
+            }
+            $definedModules[$moduleProp['module']] = true;
+        }
+
+        return $modules;
+    }
 }

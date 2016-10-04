@@ -224,6 +224,43 @@ public function onBeforeLayoutXmlCompile(Varien_Event_Observer $observer)
 }
 ```
 
+## Soft Dependencies
+When a Magento module has a dependency defined in the module config, Magento
+considers this a hard dependency. Its existence is do-or-die; if the dependency
+does not exist, Magento will crash hard with an exception helpfully noting the
+missing dependency.
+
+This is all well and good, most times. However, there are some circumstances
+where a module may not be available that isn't actually important, and installing
+the "not that important" module on a dev machine may be costly, time-consuming, or
+simply aggravating and not automatable.  Still, if a dependency exists, Magento
+will burn the house down anyway.
+
+Frequently, the solution to this will end up being to comment out the offending
+dependency, "just for now". The comment will then be slowly forgotten, and
+inevitably committed to version control. Then the mystery of "why did this 
+regress" begins again.
+
+IDDQD allows the definition of "soft" dependencies when Developer Mode is active.
+By defining a `dependencyOverrides.php` file in the root of Magento, IDDQD will
+check if a failed `<depends>` should truly cause a failure.  If it is not, it
+will be removed from the dependency tree for that execution only.
+
+```php
+return [
+    'Linus_Example' => [
+        'Some_Module',
+        'Some_OtherModule'
+    ]
+];
+```
+
+In the above example, the `Linus_Example` module will carry on, even if `Some_Module`
+isn't installed.
+
+It should go without saying that this is not a common use case, and shouldn't be
+the cornerstone of any solution. It is simply a useful workaround for an
+uncommon, but annoying, use case.
 
 ## TODO
 
